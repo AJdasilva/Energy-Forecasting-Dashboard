@@ -23,6 +23,7 @@ library(gbm)
 library(MASS)
 library(h2o)
 library(TTR)
+library(DT)
 
 library(broom)
 library(modelr)
@@ -168,6 +169,9 @@ ui <- dashboardPage(
                                 'Late Afternoon noon-6:00pm'='afternoon',
                                 'Evening 6:00pm-8:00pm'='evening','Late Evening 8:00pm-midnight'='late evening')),
         dateRangeInput("window_range", "Viewing Window Range: Start Date to End Date", start = view_window_start, end = view_window_end)
+      ),
+      box(
+          dataTableOutput('table')
       )
     )
   )
@@ -187,7 +191,11 @@ server <- function(input, output) {
     model <- evaulate_model_1(processed_data,input$date_range[1], input$date_range[2],
                      input$train_date)  
     
-    values$obj2 <- model[[3]]
+    values$obj2 <- model[[3]] 
+    
+    
+    values$obj3 <- model[[3]] %>% dplyr::select(dateTime,future_use,gbm_pred) # for data table output
+    
    })
 
   
@@ -207,6 +215,14 @@ server <- function(input, output) {
     
     model[[1]]
   })
+  output$table <- renderDataTable({
+    
+    obj3 <- values$obj3
+    
+    # allows me to give a default length to the table, datatable function from DT package
+    datatable(obj3,
+              options = list(
+                "pageLength" = 10))}) 
 }
 
 shinyApp(ui, server)
