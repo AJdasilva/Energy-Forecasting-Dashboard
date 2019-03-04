@@ -44,7 +44,7 @@ view_window_start = "2016-01-30" # initialize state of dashboard to something th
 view_window_end = "2016-04-05"
 forcast_horizon = 7
 
-get_processed_data<-function(data,time_period="morning",level_of_data = "daily",forcast_horizon = 7){
+get_processed_data<-function(data,time_period="morning",level_of_data = "daily",forecast_horizon = 7){
   
   if(time_period != "whole_day") {
   # get the specific interval you want like morning
@@ -60,8 +60,8 @@ get_processed_data<-function(data,time_period="morning",level_of_data = "daily",
   # time is
   specific_time_interval<-as_tbl_time(specific_time_interval,index=dateTime)
   
-  specific_time_interval$future_use <- lead(specific_time_interval$use,forcast_horizon)
-  
+  specific_time_interval$future_use <- round(lead(specific_time_interval$use,forecast_horizon),3)
+
   
   if (level_of_data != "hourly"){
     
@@ -76,7 +76,7 @@ get_processed_data<-function(data,time_period="morning",level_of_data = "daily",
     specific_time_interval <- inner_join(specific_time_interval, daily_factors_all_years, by="dateTime") # add in the factors since summarise removed them 
   }
   # ema is exponentially weighted moving average, putting this in the model to model last week's use trend
-  specific_time_interval$ema_use <- EMA(specific_time_interval$use, forcast_horizon)
+  specific_time_interval$ema_use <- EMA(specific_time_interval$use, forecast_horizon)
   
   return(specific_time_interval)
 }
@@ -125,7 +125,7 @@ evaulate_model_1<-function(specific_time_interval, start_date="2014-01-01",end_d
   pred <-predict.gbm(gbm, specific_time_interval_test_data,n.trees = 500)
   
   # append predictions to data frame
-  specific_time_interval_test_data$gbm_pred <- pred
+  specific_time_interval_test_data$gbm_pred <- round(pred,3)
   
   # use mean square error of model to evaluate model performance
   mse_of_model<-hydroGOF::mse(pred,specific_time_interval_test_data$future_use)
@@ -144,7 +144,7 @@ level_of_data = "daily"
 time_period = "late evening"
 
 ui <- dashboardPage(
-  dashboardHeader(title = "Forcasting Dashboard"),
+  dashboardHeader(title = "Forecasting Dashboard"),
   dashboardSidebar(),
   dashboardBody(
     # Boxes need to be put in a row (or column)
@@ -161,7 +161,7 @@ ui <- dashboardPage(
       
       box(
         title = "Controls",
-        sliderInput("slider", "Forcast Horizon (days):", 1, 50, 50),
+        sliderInput("slider", "Forecast Horizon (days):", 1, 50, 50),
         dateRangeInput("date_range", "Analysis Range: Start Date to End Date", start = start_date, end = end_date),
         dateInput("train_date","Date to End Training",value = train_end_date),
         selectInput("time_period", "Choose time period:", 
@@ -188,16 +188,22 @@ server <- function(input, output) {
    
     values$obj <- processed_data
   
+    processed_data$forecast_date <- lead(as.numeric(processed_data$dateTime),input$slider)
+    
+    processed_data$forecast_date <- as.Date(processed_data$forecast_date)
+    
     model <- evaulate_model_1(processed_data,input$date_range[1], input$date_range[2],
                      input$train_date)  
     
     values$obj2 <- model[[3]] 
     
-    
-    values$obj3 <- model[[3]] %>% dplyr::select(dateTime,future_use,gbm_pred) # for data table output
+
+    # for data table output
+    values$obj3 <- model[[3]] %>% dplyr::select(dateTime,forecast_date,future_use,
+                                                gbm_pred) %>% rename("Date" = dateTime,"Forecast Date"=forecast_date,
+                                                                     "Actual Forecast Date Use" = future_use, "Model Prediction"=gbm_pred)
     
    })
-
   
   output$plot1 <- renderPlot({
     
