@@ -93,13 +93,13 @@ plot_model <- function(specific_time_interval_test_data,view_window_start="2016-
     geom_line(aes(dateTime,gbm_pred,group=1),color="red") + 
     ggtitle(" Use[kW] Plot of Test Data (Gradient Boosting Model) ",
             subtitle=paste("Actual use blue, Predicted use red","")) +
-    theme(axis.title.x=element_blank(),axis.ticks.x=element_blank())+ylab("Use [kW]")
+    theme(axis.title.x=element_blank(),axis.ticks.x=element_blank(),text = element_text(size=15))+ylab("Use [kW]")
   
   return(model_plot)
 }
 
 evaulate_model_1<-function(specific_time_interval, start_date="2014-01-01",end_date="2016-05-08",
-                           train_end_date = "2016-01-01"){
+                           train_end_date = "2016-01-01",forecast_horizon = 7){
   
   start_day <-  which(grepl(start_date, specific_time_interval$dateTime))
   
@@ -117,8 +117,7 @@ evaulate_model_1<-function(specific_time_interval, start_date="2014-01-01",end_d
              shrinkage = 0.01)
   
   # used to get test data subset
-  pred_start_day<-start_plus_train_day+1
-  
+  pred_start_day<-start_plus_train_day+1+forecast_horizon # make sure test data doesn't include train data
   specific_time_interval_test_data <- specific_time_interval[pred_start_day:end_day,] 
   
   # predict using gradient boosting model on held out test set
@@ -161,7 +160,7 @@ ui <- dashboardPage(
       
       box(
         title = "Controls",
-        sliderInput("slider", "Forecast Horizon (days):", 1, 50, 50),
+        sliderInput("slider", "Forecast Horizon (days):", 1, 50, 7),
         dateRangeInput("date_range", "Analysis Range: Start Date to End Date", start = start_date, end = end_date),
         dateInput("train_date","Date to End Training",value = train_end_date),
         selectInput("time_period", "Choose time period:", 
@@ -193,7 +192,7 @@ server <- function(input, output) {
     processed_data$forecast_date <- as.Date(processed_data$forecast_date)
     
     model <- evaulate_model_1(processed_data,input$date_range[1], input$date_range[2],
-                     input$train_date)  
+                     input$train_date,input$slider)  
     
     values$obj2 <- model[[3]] 
     
@@ -201,7 +200,7 @@ server <- function(input, output) {
     # for data table output
     values$obj3 <- model[[3]] %>% dplyr::select(dateTime,forecast_date,future_use,
                                                 gbm_pred) %>% rename("Date" = dateTime,"Forecast Date"=forecast_date,
-                                                                     "Actual Forecast Date Use" = future_use, "Model Prediction"=gbm_pred)
+                                                                     "Actual Forecast Date Use [kW]" = future_use, "Model Prediction [kW]"=gbm_pred)
     
    })
   
@@ -217,7 +216,7 @@ server <- function(input, output) {
     
     obj <- values$obj
     model <- evaulate_model_1(obj, input$date_range[1], input$date_range[2],
-                              input$train_date)  
+                              input$train_date, input$slider)  
     
     model[[1]]
   })
