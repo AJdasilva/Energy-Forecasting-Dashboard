@@ -24,6 +24,11 @@ peak_time = "yes"
 shinyUI(navbarPage("Forecasting Dashboard",
                    
                    # define the tabs to be used in the app ----------------------------------------
+                   tabPanel("Dashboard Instructions",
+                            includeMarkdown("./instruct.Rmd"),
+                            hr()),
+                   tabPanel("Summary Statistics",
+                            hr()),
                    # POWER CONSUMPTION TAB
                    tabPanel("Power Consumption",
                             # set up styling for map
@@ -81,10 +86,6 @@ shinyUI(navbarPage("Forecasting Dashboard",
                               ),
                               box(dataTableOutput('table2', width = 850))
                             ),
-                            hr()),
-
-                   tabPanel("Summary Statistics",
-                            #includeMarkdown("./md/intro.md"),
                             hr())
                    
                    

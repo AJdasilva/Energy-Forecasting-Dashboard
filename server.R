@@ -63,13 +63,6 @@ homeC_clean_all_years <- rbind(homeC_clean_2014,homeC_clean_2015,homeC_clean_201
 # write.csv(homeC_clean_2016, file = "homeC_clean_2016.csv")
 # write.csv(homeC_clean_all_years, file = "homeC_clean_all_years.csv")
 
-##### pull in helper functions ##### 
-# source("./season_period.R")
-# source("./add_factors.R")
-# source("./get_processed_data.R")
-# source("./plot_model.R")
-# source("./evaluate_model_1.R")
-
 # Solar Power Generation Helper Functions:
 source("./get_sol_data.R")
 source("./plot_sol_model.R")
@@ -85,19 +78,18 @@ get_processed_data<-function(data,time_period="morning",level_of_data = "daily",
       specific_time_interval <- data
     }
     specific_time_interval$dateTime <- as_datetime(specific_time_interval$dateTime)
-    
+  
     # as_tbl_time makes the data frame a tibble time data frame which allows you to easily asjust how granular-
     # time is
     specific_time_interval<-as_tbl_time(specific_time_interval,index=dateTime)
     
     specific_time_interval$future_use <- round(lead(specific_time_interval$use,forecast_horizon),3)
     
-    
     if (level_of_data != "hourly"){
       
       # uses the tibbletime package
       specific_time_interval<- specific_time_interval %>% collapse_by(level_of_data) %>% 
-        group_by(dateTime) %>% summarise(use = sum(use), future_use =sum(future_use),temp=mean(temp),
+        group_by(dateTime) %>% dplyr::summarise(use = sum(use), future_use =sum(future_use),temp=mean(temp),
                                          hum=mean(hum))
       
       daily_factors_all_years$dateTime <- as.Date(daily_factors_all_years$dateTime)
@@ -216,7 +208,7 @@ shinyServer( function(input, output) {
                               input$train_date,input$slider)  
     # for data table output
     obj3 <- model[[3]] %>% dplyr::select(dateTime,forecast_date,future_use,
-                                         gbm_pred) %>% rename("Date" = dateTime,"Forecast Date"=forecast_date,
+                                         gbm_pred) %>% dplyr::rename("Date" = dateTime,"Forecast Date"=forecast_date,
                                                               "Actual Forecast Date Use [kW]" = future_use, "Model Prediction [kW]"=gbm_pred)
     # allows me to give a default length to the table, datatable function from DT package
     datatable(obj3,
@@ -258,7 +250,7 @@ shinyServer( function(input, output) {
                               input$sol_train_date,input$solslide)  
     # for data table output
     obj3 <- model[[3]] %>% dplyr::select(dateTime,forecast_date,future_gen,
-                                         gbm_pred) %>% rename("Date" = dateTime,"Forecast Date"=forecast_date,
+                                         gbm_pred) %>% dplyr::rename("Date" = dateTime,"Forecast Date"=forecast_date,
                                                               "Actual Forecast Date Gen [kW]" = future_gen, "Model Prediction [kW]"=gbm_pred)
     # allows me to give a default length to the table, datatable function from DT package
     datatable(obj3,

@@ -23,7 +23,7 @@ get_sol_data.f<-function(data,daily_fac,peak_time="yes",level_of_data = "daily",
     # ADD STUFF FOR SOLAR!!!
     # uses the tibbletime package
     specific_time_interval<- specific_time_interval %>% collapse_by(level_of_data) %>% 
-      group_by(dateTime) %>% summarise(gen = sum(gen), future_gen =sum(future_gen),temp=mean(temp),
+      group_by(dateTime) %>% dplyr::summarise(gen = sum(gen), future_gen =sum(future_gen),temp=mean(temp),
                                        hum=mean(hum),vis = mean(vis), windBearing=mean(windBearing),
                                        press = mean(press),precipProb = mean(precipProb), cc = mean(cc))
     
