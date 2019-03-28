@@ -1,10 +1,10 @@
-# Aaron
-# Solar Power Generation (Evaluate Sol Model 1)
+# Lance
+# Power Consumption Model (Evaluate Use Model 1)
 
-eval_sol_model_1.f <-function(specific_time_interval, start_date="2014-01-01",end_date="2016-05-08",
+eval_use_model_1<-function(specific_time_interval, start_date="2014-01-01",end_date="2016-05-08",
                            train_end_date = "2016-01-01",forecast_horizon = 7){
   
-  start_day <-  which(grepl(start_date, specific_time_interval$dateTime))
+  start_day <-  which(grepl(start_date, specific_time_interval$dateTime)) # get position of start date
   
   end_day <-  which(grepl(end_date, specific_time_interval$dateTime))
   
@@ -15,8 +15,8 @@ eval_sol_model_1.f <-function(specific_time_interval, start_date="2014-01-01",en
   
   # gradient boosting model
   # Note: when level_of_data is not hourly, use is cumulative, temp and hum are averages
-  gbm <- gbm(future_gen ~ gen + hum + ema_gen + temp + vis + windBearing + press + precipProb + cc + season + month, distribution = "gaussian",
-             data = specific_time_interval[start_day:start_plus_train_day,], n.trees = 500, interaction.depth = 5,
+  gbm <- gbm(future_use ~ use + hum + ema_use + temp + day_of_week + season + month, distribution = "gaussian",
+             data = specific_time_interval[start_day:start_plus_train_day,], n.trees = 500, interaction.depth = 4,
              shrinkage = 0.01)
   
   # used to get test data subset
@@ -30,7 +30,7 @@ eval_sol_model_1.f <-function(specific_time_interval, start_date="2014-01-01",en
   specific_time_interval_test_data$gbm_pred <- round(pred,3)
   
   # use mean square error of model to evaluate model performance
-  mse_of_model<-Metrics::mse(pred,specific_time_interval_test_data$future_gen)
+  mse_of_model<-Metrics::mse(pred,specific_time_interval_test_data$future_use)
   
   # return the mean square error, variable importance through summary, and the test data
   model_results<-list(mse_of_model,summary(gbm),specific_time_interval_test_data)
