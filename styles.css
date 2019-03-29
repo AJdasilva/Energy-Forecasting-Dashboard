@@ -1,4 +1,4 @@
-div.outer {
+div.power {
   position: fixed;
   top: 41px;
   left: 0;
@@ -6,6 +6,9 @@ div.outer {
   bottom: 0;
   overflow: hidden;
   padding: 0;
+  display: flex;
+  justify-content: center;
+  background-image: linear-gradient(white, gray);
 }
 
 #description {
