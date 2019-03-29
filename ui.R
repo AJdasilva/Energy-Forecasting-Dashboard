@@ -21,13 +21,16 @@ time_period = "late evening"
 peak_time = "yes"
 
 # Set up the application ui
-shinyUI(navbarPage("Forecasting Dashboard", fluid = "TRUE",
-                   
+shinyUI(navbarPage("FORECAST", fluid = "TRUE", position = "static-top",
+
                    # define the tabs to be used in the app ----------------------------------------
-                   tabPanel("Dashboard Instructions",
+                   tabPanel("Information",
                             includeMarkdown("./instruct.Rmd"),
                             hr()),
                    tabPanel("Summary Statistics",
+                            div(class="summary",
+                                tags$head(
+                                  includeCSS("./styles.css"))),
                             hr()),
                    # POWER CONSUMPTION TAB
                    tabPanel("Power Consumption",
@@ -69,7 +72,7 @@ shinyUI(navbarPage("Forecasting Dashboard", fluid = "TRUE",
                    # SOLAR POWER GENERATION TAB
                    tabPanel("Solar Power Generation",
                             # set up styling for map
-                            div(class="outer",
+                            div(class="solar",
                                 tags$head(
                                   includeCSS("./styles.css"))),
                             fluidRow(

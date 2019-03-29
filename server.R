@@ -90,7 +90,7 @@ time_period = "late evening"
 shinyServer( function(input, output) {
   # output plot 1
   output$plot1 <- renderPlot({
-    use_data <- get_use_data(homeC_clean_all_years,input$time_period,
+    use_data <- get_use_data(homeC_clean_all_years,daily_factors_all_years,input$time_period,
                                          level_of_data,input$slider)
     use_data$forecast_date <- lead(as.numeric(use_data$dateTime),input$slider)
     use_data$forecast_date <- as.Date(use_data$forecast_date)
@@ -102,7 +102,7 @@ shinyServer( function(input, output) {
   })
   # output text 1
   output$text1 <- renderText({
-    use_data <- get_use_data(homeC_clean_all_years,input$time_period,
+    use_data <- get_use_data(homeC_clean_all_years,daily_factors_all_years,input$time_period,
                              level_of_data,input$slider)
     use_data$forecast_date <- lead(as.numeric(use_data$dateTime),input$slider)
     use_data$forecast_date <- as.Date(use_data$forecast_date)
@@ -113,7 +113,7 @@ shinyServer( function(input, output) {
   })
   # output table
   output$table <- renderDataTable({
-    use_data <- get_use_data(homeC_clean_all_years,input$time_period,
+    use_data <- get_use_data(homeC_clean_all_years,daily_factors_all_years,input$time_period,
                              level_of_data,input$slider)
     use_data$forecast_date <- lead(as.numeric(use_data$dateTime),input$slider)
     use_data$forecast_date <- as.Date(use_data$forecast_date)

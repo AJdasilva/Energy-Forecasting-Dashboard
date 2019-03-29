@@ -1,3 +1,29 @@
+div.instruct {
+  position: fixed;
+  top: 41px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  padding-top: 700px;
+  display: flex;
+  justify-content: center;
+  background-image: linear-gradient(white, gray);
+}
+
+div.summary {
+  position: fixed;
+  top: 41px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  padding-top: 100px;
+  display: flex;
+  justify-content: center;
+  background-image: linear-gradient(white, gray);
+}
+
 div.power {
   position: fixed;
   top: 41px;
@@ -5,7 +31,13 @@ div.power {
   right: 0;
   bottom: 0;
   overflow: hidden;
-  padding: 0;
+  padding-top: 100px;
+  display: flex;
+  justify-content: center;
+  background-image: linear-gradient(white, gray);
+}
+
+div.solar {
   display: flex;
   justify-content: center;
   background-image: linear-gradient(white, gray);
@@ -20,9 +52,4 @@ div.power {
   opacity: 0.95;
   zoom: 0.9;
   transition: opacity 500ms 1s;
-}
-
-.leaflet {
-  height: 100%; 
-  width: 100%;
 }
