@@ -8,6 +8,7 @@ library(leaflet)
 library(shinydashboard)
 library(DT)
 library(markdown)
+library(shinycssloaders)
 
 # initialize state of dashboard to something that works 
 view_window_start = "2016-01-30"
@@ -51,8 +52,8 @@ shinyUI(navbarPage("FORECAST", fluid = "TRUE", position = "static-top",
                             fluidRow(
                                  box(
                                      width = 8,
-                                     plotOutput("plot1", width = '100%')
-                                     ),
+                                     withSpinner(plotOutput("plot1", width = '100%')) 
+                                     ) ,
                                  box(
                                     width = 4,
                                     sliderInput("slider", "Forecast Horizon (days)", 1, 50, 7, width = '100%'),
@@ -84,8 +85,10 @@ shinyUI(navbarPage("FORECAST", fluid = "TRUE", position = "static-top",
                             ),
                             br(),
                             fluidRow(
-                              
-                              box(plotOutput("plot2"), width = 8),
+                              box(
+                                width = 8,
+                                withSpinner(plotOutput("plot2", width = '100%')) # loading spinner which shows until the plot is loaded
+                              ) ,
                               box(
                                 width = 4,
                                 sliderInput(width = '100%', "solslide", "Forecast Horizon (days)", 1, 50, 3),
