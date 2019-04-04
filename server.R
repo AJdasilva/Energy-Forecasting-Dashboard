@@ -29,6 +29,7 @@ library(TTR)
 library(shiny)
 library(shinydashboard)
 
+
 # set up some colours to use
 DarkBlue <- rgb(red = 0, green = 51, blue = 141, maxColorValue = 255)
 Purple <- rgb(red = 142, green = 37, blue = 141, maxColorValue = 255)
@@ -41,6 +42,9 @@ homeC_clean_2015 <- read.csv("homeC_clean_2015.csv")
 homeC_clean_2016 <- read.csv("homeC_clean_2016.csv")
 daily_factors_all_years <- read.csv("homeC_daily_factors.csv")
 homeC_clean_all_years <- rbind(homeC_clean_2014,homeC_clean_2015,homeC_clean_2016)
+
+homeC_clean_predictors_hourly <- read.csv("homeC_clean_predictors_hourly.csv")
+homeC_clean_predictors_hourly$dateTime<-as.Date(homeC_clean_predictors_hourly$dateTime)
 
 # Establish a new column for peak our for solar power generation
 # peak_time<-function(df){
@@ -73,6 +77,8 @@ source("./get_use_data.R")
 source("./plot_use_model.R")
 source("./eval_use_model_1.R")
 
+source("./SummaryStatsFunctions.R")
+
 ##### end helper functions ##### 
 
 # initialize state of dashboard to something that works 
@@ -85,11 +91,46 @@ train_end_date = "2016-01-01"
 level_of_data = "daily"
 time_period = "late evening"
 
+xlim <- c(as.Date("2014-01-02"),as.Date("2016-12-01"))
+ylim <- c(1,5)
+
 
 # establish shiny server -------------------------------------------------------
 shinyServer( function(input, output) {
+  
+  ranges <- reactiveValues(x = NULL, y = NULL)
+  
+  # When a double-click happens, check if there's a brush on the plot.
+  # If so, zoom to the brush bounds; if not, reset the zoom.
+  observeEvent(input$plot3_dblclick, {
+    brush <- input$plot3_brush
+    if (!is.null(brush)) {
+      ranges$x <- c(brush$xmin, brush$xmax)
+      
+      ranges$y <- c(brush$ymin, brush$ymax)
+      
+    } else {
+      ranges$x <- NULL
+      ranges$y <- NULL
+    }
+  })
+    
+   # zoomable plot
+   # output plot 3
+  output$plot3 <- renderPlot({
+    
+    if (!is.null(ranges$x)) {
+    ranges$x <- as.Date(ranges$x,origin = "1970-01-01")
+    }
+    plot3<-plot_variable(homeC_clean_predictors_hourly,input$variable_to_plot,xlim=ranges$x,ylim=ranges$y) # look into why only processed data works here
+    
+    plot3
+  })
+  
+  
   # output plot 1
   output$plot1 <- renderPlot({
+    
     use_data <- get_use_data(homeC_clean_all_years,daily_factors_all_years,input$time_period,
                                          level_of_data,input$slider)
     use_data$forecast_date <- lead(as.numeric(use_data$dateTime),input$slider)
@@ -98,8 +139,8 @@ shinyServer( function(input, output) {
                               input$train_date,input$slider)  
     obj2 <- model[[3]] 
     plot <- plot_use_model(obj2,input$window_range[1],input$window_range[2])
-    plot
-  })
+    plot 
+  }) 
   # output text 1
   output$text1 <- renderText({
     use_data <- get_use_data(homeC_clean_all_years,daily_factors_all_years,input$time_period,
@@ -132,6 +173,8 @@ shinyServer( function(input, output) {
   #### Solar Power Generation Outputs: ####
   # output plot 2
   output$plot2 <- renderPlot({
+
+    
     processed_data <- get_sol_data.f(homeC_clean_all_years,daily_factors_all_years,input$peak_time,
                                          level_of_data,input$solslide)
     processed_data$forecast_date <- lead(as.numeric(processed_data$dateTime),input$solslide)
@@ -169,13 +212,14 @@ shinyServer( function(input, output) {
     datatable(obj3,
               options = list(
                 "pageLength" = 10))})
-  output$cat1 <- renderImage({
-    # When input$n is 3, filename is ./images/image3.jpeg
-    filename <- normalizePath(paste(getwd(), '/cat1.jpeg', sep = ''))
-    
-    # Return a list containing the filename and alt text
-    list(src = filename,
-         alt = paste("Image number", input$n))
-    
-  }, deleteFile = FALSE)
+  
+output$cat1 <- renderImage({
+  # When input$n is 3, filename is ./images/image3.jpeg
+  filename <- normalizePath(paste(getwd(), '/cat1.jpeg', sep = ''))
+  
+  # Return a list containing the filename and alt text
+  list(src = filename,
+       alt = paste("Image number", input$n))
+  
+}, deleteFile = FALSE)
 })

@@ -28,26 +28,44 @@ shinyUI(navbarPage("FORECAST", fluid = "TRUE", position = "static-top",
                    tabPanel("Information",
                             includeMarkdown("./instruct.Rmd"),
                             hr()),
+                   # SUMMARY STATISTICS TAB
                    tabPanel("Summary Statistics",
                             div(class="summary",
                                 tags$head(
                                   includeCSS("./styles.css"))),
-                            # MAIN PANEL FOR DISPLAYING OUTPUTS
-                            # SEE https://shiny.rstudio.com/articles/tabsets.html
                             mainPanel(h3("Summary Statistics"),
                                       width = 12,
-                              
-                              # Output: Tabset w/ plot, summary, and table ----
-                              tabsetPanel(type = "tabs",
-                                          tabPanel("Power Consumption"
-                                                   ),
-                                          tabPanel("Solar Power Generation"
-                                                   ),
-                                          tabPanel("Cat Photos",
-                                                   imageOutput("cat1"))
-                                         ) # END TABSET PANEL
-                              ), # END MAIN PANEL FOR DISPLAYING OUTPUTS
-                            hr()),
+                                      
+                                      # Output: Tabset w/ plot, summary, and table ----
+                                      tabsetPanel(type = "tabs",
+                                                  tabPanel("Variable Summaries",
+                                                           fluidRow(
+                                                             box(width = 4, 
+                                                                 selectInput(width = '100%', "variable_to_plot", "Choose Variable to Plot:", 
+                                                                             choices = c('Power Use [kW]'='use','Solar Generation [kW]'='gen','Temperature'='temp',
+                                                                                         'Humidity'='hum',
+                                                                                         'Visibility'='vis','Pressure'='press','Wind Bearing'='windBearing',
+                                                                                         'Precipitation Intensity'='pricipIntensity'))
+                                                             )),
+                                                           fluidRow(
+                                                             column(width = 4, class = "well",
+                                                                    h4("Brush and double-click to zoom"),
+                                                                    plotOutput("plot3", height = 300,
+                                                                               dblclick = "plot3_dblclick",
+                                                                               brush = brushOpts(
+                                                                                 id = "plot3_brush",
+                                                                                 resetOnNew = TRUE
+                                                                               )
+                                                                    )
+                                                             )),hr())
+                                                  ,
+                                                  tabPanel("Solar Power Generation"
+                                                  ),
+                                                  tabPanel("Cat Photos",
+                                                           imageOutput("cat1"))
+                                      ) # END TABSET PANEL
+                            ), # END MAIN PANEL FOR DISPLAYING OUTPUTS
+                            hr()),  
                    # POWER CONSUMPTION TAB
                    tabPanel("Power Consumption",
                             # set up styling for map
@@ -67,7 +85,7 @@ shinyUI(navbarPage("FORECAST", fluid = "TRUE", position = "static-top",
                             fluidRow(
                                  box(
                                      width = 8,
-                                     withSpinner(plotOutput("plot1", width = '100%')) 
+                                     withSpinner(plotOutput("plot1", width = '100%'),type=5) 
                                      ) ,
                                  box(
                                     width = 4,
@@ -102,7 +120,7 @@ shinyUI(navbarPage("FORECAST", fluid = "TRUE", position = "static-top",
                             fluidRow(
                               box(
                                 width = 8,
-                                withSpinner(plotOutput("plot2", width = '100%')) # loading spinner which shows until the plot is loaded
+                                withSpinner(plotOutput("plot2", width = '100%'),type=5) # loading spinner which shows until the plot is loaded
                               ) ,
                               box(
                                 width = 4,
@@ -122,5 +140,6 @@ shinyUI(navbarPage("FORECAST", fluid = "TRUE", position = "static-top",
                    
         # close the UI definition ...
                    ) # end navbarPage
-        ) # end shinyUI
+        ) 
+        # end shinyUI
 
