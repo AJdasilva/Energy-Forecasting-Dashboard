@@ -48,8 +48,8 @@ shinyUI(navbarPage("FORECAST", fluid = "TRUE", position = "static-top",
                                                                                          'Precipitation Intensity'='pricipIntensity'))
                                                              )),
                                                            fluidRow(
-                                                             column(width = 4, class = "well",
-                                                                    h4("Brush and double-click to zoom"),
+                                                             column(width = 10, class = "well",
+                                                                    h4("Brush, double-click to zoom, triple-click to reset"),
                                                                     plotOutput("plot3", height = 300,
                                                                                dblclick = "plot3_dblclick",
                                                                                brush = brushOpts(
