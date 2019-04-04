@@ -44,4 +44,4 @@ The forecasting models use a fixed number of predictors variables which are rela
 
 ### Who made it?
 
-This dashboard is a collaborative effort between Lance Wrobel, Aaron DeSilva, and Rose Dennis.
+This dashboard is a collaborative effort between Lance Wrobel, Aaron Da Silva, and Rose Dennis.
