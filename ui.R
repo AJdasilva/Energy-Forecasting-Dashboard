@@ -32,6 +32,17 @@ shinyUI(navbarPage("FORECAST", fluid = "TRUE", position = "static-top",
                             div(class="summary",
                                 tags$head(
                                   includeCSS("./styles.css"))),
+                            # MAIN PANEL FOR DISPLAYING OUTPUTS
+                            # SEE https://shiny.rstudio.com/articles/tabsets.html
+                            mainPanel(width = 12,
+                              
+                              # Output: Tabset w/ plot, summary, and table ----
+                              tabsetPanel(type = "tabs",
+                                          tabPanel("Plot"),
+                                          tabPanel("Summary"),
+                                          tabPanel("Table")
+                                         ) # END TABSET PANEL
+                              ), # END MAIN PANEL FOR DISPLAYING OUTPUTS
                             hr()),
                    # POWER CONSUMPTION TAB
                    tabPanel("Power Consumption",
