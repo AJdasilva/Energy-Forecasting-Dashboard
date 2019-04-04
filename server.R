@@ -169,4 +169,13 @@ shinyServer( function(input, output) {
     datatable(obj3,
               options = list(
                 "pageLength" = 10))})
+  output$cat1 <- renderImage({
+    # When input$n is 3, filename is ./images/image3.jpeg
+    filename <- normalizePath(paste(getwd(), '/cat1.jpeg', sep = ''))
+    
+    # Return a list containing the filename and alt text
+    list(src = filename,
+         alt = paste("Image number", input$n))
+    
+  }, deleteFile = FALSE)
 })
