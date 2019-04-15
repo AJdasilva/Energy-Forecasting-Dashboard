@@ -57,15 +57,27 @@ shinyUI(navbarPage("FORECAST", fluid = "TRUE", position = "static-top",
                                                                                  resetOnNew = TRUE
                                                                                )
                                                                     )
-                                                             )),hr())
-                                                  ,
+                                                             )),
+                                                          box(
+                                                            column(width = 10, class = "well",
+                                                            plotOutput("plot4", height = 300)
+                                                           )
+                                                            ),
+                                                  box(width = 4, 
+                                                      selectInput(width = '100%', "month", "Select Month for Mean of Variable:", 
+                                                                  choices = c('January'= 1,'February' = 2, 'March' = 3, 'April' = 4,
+                                                                              'May' = 5, 'June' = 6, 'July' = 7, 'August' = 8,
+                                                                              'September'= 9,'October' = 10, 'November' = 11,
+                                                                              'December' = 12)),
+                                                      "Mean of Selected Variable for Selected Month:",textOutput("text3")
+                                                      )
+                                                 ),
                                                   tabPanel("Solar Power Generation"
                                                   ),
                                                   tabPanel("Cat Photos",
-                                                           imageOutput("cat1"))
-                                      ) # END TABSET PANEL
-                            ), # END MAIN PANEL FOR DISPLAYING OUTPUTS
-                            hr()),  
+                                                           imageOutput("cat1"),hr())
+                                      ), # END TABSET PANEL
+                            hr())), # END MAIN PANEL FOR DISPLAYING OUTPUTS
                    # POWER CONSUMPTION TAB
                    tabPanel("Power Consumption",
                             # set up styling for map
@@ -140,6 +152,6 @@ shinyUI(navbarPage("FORECAST", fluid = "TRUE", position = "static-top",
                    
         # close the UI definition ...
                    ) # end navbarPage
-        ) 
-        # end shinyUI
+        
+        )# end shinyUI
 

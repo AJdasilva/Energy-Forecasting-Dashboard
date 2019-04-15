@@ -122,11 +122,18 @@ shinyServer( function(input, output) {
     if (!is.null(ranges$x)) {
     ranges$x <- as.Date(ranges$x,origin = "1970-01-01")
     }
-    plot3<-plot_variable(homeC_clean_predictors_hourly,input$variable_to_plot,xlim=ranges$x,ylim=ranges$y) # look into why only processed data works here
+    plot3<-plot_variable(homeC_clean_predictors_hourly,input$variable_to_plot,xlim=ranges$x,ylim=ranges$y)
     
     plot3
   })
   
+  # output plot 4, histogram in the summary statistics tab
+  output$plot4 <- renderPlot({
+    
+    plot4 <- plot_histogram(homeC_clean_predictors_hourly,input$variable_to_plot) 
+    
+    plot4
+  })
   
   # output plot 1
   output$plot1 <- renderPlot({
@@ -169,11 +176,16 @@ shinyServer( function(input, output) {
               options = list(
                 "pageLength" = 10))})
   
+  output$text3 <- renderText({
+    
+    mean_of_subset<-get_mean(homeC_clean_predictors_hourly,input$variable_to_plot, input$month)
+    
+    print(mean_of_subset)
+  })
   
   #### Solar Power Generation Outputs: ####
   # output plot 2
   output$plot2 <- renderPlot({
-
     
     processed_data <- get_sol_data.f(homeC_clean_all_years,daily_factors_all_years,input$peak_time,
                                          level_of_data,input$solslide)
@@ -212,6 +224,7 @@ shinyServer( function(input, output) {
     datatable(obj3,
               options = list(
                 "pageLength" = 10))})
+  
   
 output$cat1 <- renderImage({
   # When input$n is 3, filename is ./images/image3.jpeg
