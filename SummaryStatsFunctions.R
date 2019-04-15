@@ -30,13 +30,22 @@ plot_histogram <- function(data, variable_to_plot){
 }
 
 # outputs the mean of a variable given a specific month
-get_mean <- function(data, variable_to_plot, given_month){
+get_summary_stats <- function(data, variable_to_plot, given_month){
+  
+  summary_stats_vector <- c(0,0,0,0,0)
   
   data_subset <- data %>% dplyr::filter(month(dateTime) == given_month)
   
   variable_selected <- data_subset[,variable_to_plot]
   
-  mean_of_subset <- mean(na.omit(variable_selected))
+  summary_stats_vector[[1]] <- round(mean(na.omit(variable_selected)),3)
+  summary_stats_vector[[2]] <- round(var(na.omit(variable_selected)),3)
+  summary_stats_vector[[3]] <- round(min(na.omit(variable_selected)),3)
+  summary_stats_vector[[4]] <- round(max(na.omit(variable_selected)),3)
+  summary_stats_vector[[5]] <- round(skewness(na.omit(variable_selected)),3)
   
-  return(mean_of_subset)
+  summary_stats_df<-as.data.frame(cbind(c("Mean","Variance", "Minimum", "Maximum", "Skewness"),summary_stats_vector))
+  colnames(summary_stats_df) <- c("Statistic", "Value")
+  
+  return(summary_stats_df)
 } 

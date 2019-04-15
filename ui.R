@@ -64,12 +64,12 @@ shinyUI(navbarPage("FORECAST", fluid = "TRUE", position = "static-top",
                                                            )
                                                             ),
                                                   box(width = 4, 
-                                                      selectInput(width = '100%', "month", "Select Month for Mean of Variable:", 
+                                                      selectInput(width = '100%', "month", "Select Month for Statistics:", 
                                                                   choices = c('January'= 1,'February' = 2, 'March' = 3, 'April' = 4,
                                                                               'May' = 5, 'June' = 6, 'July' = 7, 'August' = 8,
                                                                               'September'= 9,'October' = 10, 'November' = 11,
                                                                               'December' = 12)),
-                                                      h4("Mean of Selected Variable:",textOutput("text3"))
+                                                      dataTableOutput('table3')
                                                       )
                                                  ),
                                                   tabPanel("Solar Power Generation"

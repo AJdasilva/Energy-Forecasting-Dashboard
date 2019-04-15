@@ -28,6 +28,7 @@ library(MASS)
 library(TTR)
 library(shiny)
 library(shinydashboard)
+library(e1071)  
 
 
 # set up some colours to use
@@ -176,11 +177,15 @@ shinyServer( function(input, output) {
               options = list(
                 "pageLength" = 10))})
   
-  output$text3 <- renderText({
+  # output table 3
+  output$table3 <- renderDataTable({
     
-    mean_of_subset<-get_mean(homeC_clean_predictors_hourly,input$variable_to_plot, input$month)
+    summary_stats_df<-get_summary_stats(homeC_clean_predictors_hourly,input$variable_to_plot, input$month)
     
-    print(mean_of_subset)
+    obj4 <- summary_stats_df
+    
+    datatable(obj4)
+    
   })
   
   #### Solar Power Generation Outputs: ####
