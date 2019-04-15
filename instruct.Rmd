@@ -34,13 +34,6 @@ The forecasting models use a fixed number of predictors variables which are rela
 
 <b>Dataset information:</b> The data used in this dashboard is from a single home's electricity consumption and solar generation data; weather data is also used to complement the electrical data. Data is from a collection of datasets called the Smart* Data Set for Sustainability  which is part of the Umass Trace Repository. Specifically, we used Home C from the 2017 release of the dataset.
 
-<br> 
-
-### How do I use it?
-
-
-<br>
-
 ### Who made it?
 
 This dashboard is a collaborative effort between Lance Wrobel, Aaron da Silva, and Rose Dennis.

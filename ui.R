@@ -69,7 +69,7 @@ shinyUI(navbarPage("FORECAST", fluid = "TRUE", position = "static-top",
                                                                               'May' = 5, 'June' = 6, 'July' = 7, 'August' = 8,
                                                                               'September'= 9,'October' = 10, 'November' = 11,
                                                                               'December' = 12)),
-                                                      "Mean of Selected Variable for Selected Month:",textOutput("text3")
+                                                      h4("Mean of Selected Variable:",textOutput("text3"))
                                                       )
                                                  ),
                                                   tabPanel("Solar Power Generation"
@@ -89,8 +89,8 @@ shinyUI(navbarPage("FORECAST", fluid = "TRUE", position = "static-top",
                             ),
                             # Boxes need to be put in a row (or column)
                             fluidRow(
-                              box("Error of Use Model (mse):",
-                                  textOutput("text1")),
+                              box(h4("Error of Use Model (mse):",
+                                  textOutput("text1"))),
                               width = 12
                             ),
                             br(),
@@ -126,7 +126,7 @@ shinyUI(navbarPage("FORECAST", fluid = "TRUE", position = "static-top",
                             ),
                             # Boxes need to be put in a row (or column)
                             fluidRow(
-                              box("Error of Use Model (mse):",textOutput("text2"))
+                              box(h4("Error of Use Model (mse):",textOutput("text2")))
                             ),
                             br(),
                             fluidRow(
