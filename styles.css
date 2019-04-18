@@ -38,18 +38,14 @@ div.power {
 }
 
 div.solar {
+  position: fixed;
+  top: 41px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  padding-top: 100px;
   display: flex;
   justify-content: center;
   background-image: linear-gradient(white, gray);
-}
-
-#description {
-  /* Appearance */
-  background-color: white;
-  padding: 0 20px 20px 20px;
-  cursor: move;
-  /* Fade out while not hovering */
-  opacity: 0.95;
-  zoom: 0.9;
-  transition: opacity 500ms 1s;
 }

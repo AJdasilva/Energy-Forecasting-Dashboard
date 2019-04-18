@@ -28,7 +28,8 @@ library(MASS)
 library(TTR)
 library(shiny)
 library(shinydashboard)
-library(e1071)  
+library(e1071)
+library(plotly)
 
 
 # set up some colours to use
@@ -129,7 +130,7 @@ shinyServer( function(input, output) {
   })
   
   # output plot 4, histogram in the summary statistics tab
-  output$plot4 <- renderPlot({
+  output$plot4 <- renderPlotly({
     
     plot4 <- plot_histogram(homeC_clean_predictors_hourly,input$variable_to_plot) 
     
@@ -137,7 +138,7 @@ shinyServer( function(input, output) {
   })
   
   # output plot 1
-  output$plot1 <- renderPlot({
+  output$plot1 <- renderPlotly({
     
     use_data <- get_use_data(homeC_clean_all_years,daily_factors_all_years,input$time_period,
                                          level_of_data,input$slider)
@@ -190,7 +191,7 @@ shinyServer( function(input, output) {
   
   #### Solar Power Generation Outputs: ####
   # output plot 2
-  output$plot2 <- renderPlot({
+  output$plot2 <- renderPlotly({
     
     processed_data <- get_sol_data.f(homeC_clean_all_years,daily_factors_all_years,input$peak_time,
                                          level_of_data,input$solslide)

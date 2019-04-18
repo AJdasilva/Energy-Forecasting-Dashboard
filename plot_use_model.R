@@ -14,7 +14,8 @@ plot_use_model <- function(specific_time_interval_test_data,view_window_start="2
     geom_line(aes(dateTime,gbm_pred,group=1),color="red") + 
     ggtitle(" Use[kW] Plot of Test Data (Gradient Boosting Model) ",
             subtitle=paste("Actual use blue, Predicted use red","")) +
-    theme(axis.title.x=element_blank(),axis.ticks.x=element_blank(),text = element_text(size=15))+ylab("Use [kW]")
+    theme(plot.title=element_text(size=11), axis.title.x=element_blank(),axis.ticks.x=element_blank(),text = element_text(size=15))+ylab("Use [kW]")
+  model_plot <- plotly::ggplotly(model_plot)
   
   return(model_plot)
 }
