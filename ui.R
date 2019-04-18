@@ -9,6 +9,7 @@ library(shinydashboard)
 library(DT)
 library(markdown)
 library(shinycssloaders)
+library(plotly)
 
 # initialize state of dashboard to something that works 
 view_window_start = "2016-01-30"
