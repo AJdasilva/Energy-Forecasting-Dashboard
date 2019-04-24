@@ -23,10 +23,8 @@ plot_variable <- function(data,variable_to_plot,xlim,ylim){
 plot_histogram <- function(data, variable_to_plot){
   
   histogram <- ggplot(data, aes(get(variable_to_plot)))+geom_histogram(aes(y=..density..),bins=30, color="blue",fill="white",alpha=0.5)+
-    geom_density(aes(y=..density..),color="black",fill="gray",alpha = 0.2)+labs(x=variable_to_plot, y = "count")+
-    ggtitle(paste("Histogram and density plot of",variable_to_plot))+
-    theme(plot.title=element_text(size=11),axis.ticks.x=element_blank(),text = element_text(size=15))
-  histogram <- plotly::ggplotly(histogram)
+    geom_density(aes(y=..density..),color="black",fill="gray",alpha = 0.2)+labs(x=variable_to_plot, y = "Density")+
+    ggtitle(paste("Kernel density plot of",variable_to_plot))+theme(axis.ticks.x=element_blank(),text = element_text(size=15))
   
   return(histogram)
 }
