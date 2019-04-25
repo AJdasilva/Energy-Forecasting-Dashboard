@@ -9,6 +9,7 @@ library(shinydashboard)
 library(DT)
 library(markdown)
 library(shinycssloaders)
+library(plotly)
 
 # initialize state of dashboard to something that works 
 view_window_start = "2016-01-30"
@@ -39,16 +40,16 @@ shinyUI(navbarPage("FORECAST", fluid = "TRUE", position = "static-top",
                                       # Output: Tabset w/ plot, summary, and table ----
                                       tabsetPanel(type = "tabs",
                                                   tabPanel("Variable Summaries",
-                                                           fluidRow(
-                                                             box(width = 4, 
+                                                           fluidRow(width = 12,
+                                                             box(width = 12, br(),
                                                                  selectInput(width = '100%', "variable_to_plot", "Choose Variable to Plot:", 
                                                                              choices = c('Power Use [kW]'='use','Solar Generation [kW]'='gen','Temperature [°F]'='temp',
                                                                                          'Humidity [percent]'='hum',
                                                                                          'Visibility [scale 0-10]'='vis','Pressure [mbar]'='press','Wind Bearing [degrees]'='windBearing',
-                                                                                         'Precipitation Intensity [percent]'='pricipIntensity'))
+                                                                                         'Precipitation Intensity [precent]'='pricipIntensity'))
                                                              )),
                                                            fluidRow(
-                                                             column(width = 10, class = "well",
+                                                             column(width = 12, class = "well",
                                                                     h4("Brush, double-click to zoom, triple-click to reset"),
                                                                     plotOutput("plot3", height = 300,
                                                                                dblclick = "plot3_dblclick",
@@ -58,9 +59,10 @@ shinyUI(navbarPage("FORECAST", fluid = "TRUE", position = "static-top",
                                                                                )
                                                                     )
                                                              )),
-                                                          box(
+                                                  fluidRow(width = 12,
+                                                  box(width = 8,
                                                             column(width = 10, class = "well",
-                                                            plotOutput("plot4", height = 300)
+                                                            plotlyOutput("plot4")
                                                            )
                                                             ),
                                                   box(width = 4, 
@@ -71,9 +73,8 @@ shinyUI(navbarPage("FORECAST", fluid = "TRUE", position = "static-top",
                                                                               'December' = 12)),
                                                       dataTableOutput('table3')
                                                       )
+                                                 ) # end fluid row
                                                  ),
-                                                  tabPanel("Solar Power Generation"
-                                                  ),
                                                   tabPanel("Cat Photos",
                                                            imageOutput("cat1"),hr())
                                       ), # END TABSET PANEL
@@ -97,7 +98,7 @@ shinyUI(navbarPage("FORECAST", fluid = "TRUE", position = "static-top",
                             fluidRow(
                                  box(
                                      width = 8,
-                                     withSpinner(plotOutput("plot1", width = '100%'),type=5) 
+                                     withSpinner(plotlyOutput("plot1", width = '100%'),type=5) 
                                      ) ,
                                  box(
                                     width = 4,
@@ -132,7 +133,7 @@ shinyUI(navbarPage("FORECAST", fluid = "TRUE", position = "static-top",
                             fluidRow(
                               box(
                                 width = 8,
-                                withSpinner(plotOutput("plot2", width = '100%'),type=5) # loading spinner which shows until the plot is loaded
+                                withSpinner(plotlyOutput("plot2", width = '100%'),type=5) # loading spinner which shows until the plot is loaded
                               ) ,
                               box(
                                 width = 4,
