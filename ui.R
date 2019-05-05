@@ -74,9 +74,8 @@ shinyUI(navbarPage("FORECAST", fluid = "TRUE", position = "static-top",
                                                       dataTableOutput('table3')
                                                       )
                                                  ) # end fluid row
-                                                 ),
-                                                  tabPanel("Cat Photos",
-                                                           imageOutput("cat1"),hr())
+                                                 )
+                                                 
                                       ), # END TABSET PANEL
                             hr())), # END MAIN PANEL FOR DISPLAYING OUTPUTS
                    # POWER CONSUMPTION TAB
